@@ -31,68 +31,85 @@ at the time of this documentation (April 2019). It may be different for some ope
 
 ##### Install Dependencies
 
-sudo apt-get install libboost-all-dev libgoogle-perftools-dev libtool m4 automake cmake libtbb-dev libgsl0-dev <br>
-OR <br>
-sudo apt-get install libboost-all-dev <br>
-sudo apt-get install libgoogle-perftools-dev<br>
-sudo apt-get install libtool m4 automake<br>
-sudo apt-get install cmake <br>
-sudo apt-get install libtbb-dev <br>
-sudo apt-get install libgs10-dev<br>
-
+```bash
+sudo apt-get install libboost-all-dev libgoogle-perftools-dev libtool m4 automake cmake libtbb-dev libgsl0-dev
+OR
+sudo apt-get install libboost-all-dev
+sudo apt-get install libgoogle-perftools-de
+sudo apt-get install libtool m4 automak
+sudo apt-get install cmake
+sudo apt-get install libtbb-dev
+sudo apt-get install libgs10-de
+```
  
 ##### Install GCC
 
-sudo apt-get update && \ <br>
-sudo apt-get install build-essential software-properties-common -y && \ <br>
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && \ <br>
-sudo apt-get update && \ <br>
-sudo apt-get install gcc-snapshot -y && \ <br>
-sudo apt-get update && \ <br>
-sudo apt-get install gcc-7 g++-7 -y && \ <br>
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7 && \ <br>
-sudo apt-get install gcc-4.8 g++-4.8 -y && \ <br>
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8; <br>
-sudo update-alternatives --config gcc <br>
-gcc -v <br>
+```bash
+sudo apt-get update && \
+sudo apt-get install build-essential software-properties-common -y && \
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
+sudo apt-get update && \
+sudo apt-get install gcc-snapshot -y && \
+sudo apt-get update && \
+sudo apt-get install gcc-7 g++-7 -y && \
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7 && \
+sudo apt-get install gcc-4.8 g++-4.8 -y && \
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8;
+sudo update-alternatives --config gcc
+gcc -v
+```
 
 ##### Install PERF (Possibly needed)
 
-sudo apt-get install libgoogle-perftools-dev <br>
-sudo apt install linux-tools-common gawk <br>
-sudo apt-get install linux-tools-generic <br>
-sudo apt-get install linux-tools-4.13.0-45-generic <br>
-sudo apt-get install linux-cloud-tools-4.13.0-45-generic <br>
+```bash
+sudo apt-get install libgoogle-perftools-dev
+sudo apt install linux-tools-common gawk
+sudo apt-get install linux-tools-generic
+sudo apt-get install linux-tools-4.13.0-45-generic
+sudo apt-get install linux-cloud-tools-4.13.0-45-generic
+```
 
 ##### Get from Github
 
-mkdir temp <br>
-cd temp <br>
-git clone https://github.com/ucf-cs/boost-tlds.git <br>
-(change "temp" folder name to "trans-dev") <br>
-cd trans-dev <br>
-bash bootstrap.sh <br>
-cd ../trans-compile <br>
-../trans-dev/configure <br>
+```bash
+git clone https://github.com/roghnin/boost-tlds.git
+```
 
-##### MAKE and TEST
+##### compile
 
-cd trans-compile <br>
-make -j8 <br>
-cd trans-dev/script <br>
-python pqtest.py '../../trans-compile/src/trans' <br>
- 
+```bash
+./compiile.sh
+```
+
+##### TEST
+
+```bash
+cd trans-dev/script
+python pqtest.py '../trans-compile/src/trans'
+```
+
 ##### DEBUG
- 
-cd trans-compile <br>
-make -j8 CXXFLAGS='-O0 -g' <br>
-cd src <br>
 
-gdb --args ./trans <data-structure> <nthreads> <iterations> <txn-size> <key-range> <percent-insert> <percent-delete> <br>
-OR <br>
-libtool --mode=execute gdb trans <br>
-OR <br>
-gdb ./trans <br>
+```bash
+cd trans-compile
+make -j8 CXXFLAGS='-O0 -g'
+cd src
+```
 
+```bash
+gdb --args ./trans <data-structure> <nthreads> <iterations> <txn-size> <key-range> <percent-insert> <percent-delete>
+```
+
+OR
+
+```bash
+libtool --mode=execute gdb trans
+```
+
+OR
+
+```bash
+gdb ./trans
+```
 
 ### This concludes the guide.
