@@ -452,21 +452,21 @@ int main(int argc, const char *argv[])
     assert(keyRange < 0xffffffff);
 
     const char* setName[] = 
-    {   "TransList",
-        "RSTMList",
-        "BoostingList",
-        "TransSkip",
-        "BoostingSkip",
-        "OSTMSkip",
-        "TransSkipMap",
-        "TransListMap",
-        "Multiple Containers",
-        "TransList with DTT",
-        "TransSkip with DTT",
-        "TransListMap with DTT",
-        "TransSkipMap with DTT",
-        "Multiple Containers with DTT",
-        "TransListMap Double Access with DTT"
+    {   /*0*/"TransList",
+        /*1*/"RSTMList",
+        /*2*/"BoostingList",
+        /*3*/"TransSkip",
+        /*4*/"BoostingSkip",
+        /*5*/"OSTMSkip",
+        /*6*/"TransSkipMap",
+        /*7*/"TransListMap",
+        /*8*/"Multiple Containers",
+        /*9*/"TransList with DTT",
+        /*10*/"TransSkip with DTT",
+        /*11*/"TransListMap with DTT",
+        /*12*/"TransSkipMap with DTT",
+        /*13*/"Multiple Containers with DTT",
+        /*14*/"TransListMap Double Access with DTT"
     };
 
     printf("Start testing %s with %d threads %d iterations %d operations %lu unique keys %d%% insert %d%% delete.\n", setName[setType], numThread, testSize, tranSize, keyRange, insertion, (insertion + deletion) >= 100 ? 100 - insertion : deletion);
