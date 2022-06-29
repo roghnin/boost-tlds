@@ -152,6 +152,9 @@ private:
 
     void transskip_free();
 
+    ReturnCode do_update(setkey_t key, Desc* desc, uint8_t opid,
+            Node*& inserted, Node*& pred, bool is_put);
+
 public:
     /**
      * The reference to the transaction object
@@ -181,6 +184,19 @@ public:
      * @return          The ReturnCode of the final status of the operation
      */
     ReturnCode Insert(setkey_t key, Desc* desc, uint8_t opid,
+            Node*& inserted, Node*& pred);
+
+    /**
+     * Put a node into the list. Overwrite value if key exists
+     *
+     * @param key       The key of the operation this insert is apart of
+     * @param desc      The Descriptor object describing this operation
+     * @param opid      The id (index) of the operation in the descriptor
+     * @param inserted  The node that was inserted
+     * @param pred      The predecessor node
+     * @return          The ReturnCode of the final status of the operation
+     */
+    ReturnCode Put(setkey_t key, Desc* desc, uint8_t opid,
             Node*& inserted, Node*& pred);
 
     /**

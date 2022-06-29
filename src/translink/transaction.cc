@@ -393,6 +393,23 @@ ReturnCode TransactionHandler::CallOps(Desc* desc, TransactionalContainer* list,
             onAbort[onAbortIndex++] = new(TransactionHandler::m_onFinishAllocator->Alloc()) OnFinish{list, insertNode, predNode, desc};
         }
     }
+    else if (opType == PUT)
+    {
+        Node* insertNode;
+        Node* predNode;
+
+        *ret = list->Put(key, desc, opId, insertNode, predNode);
+#ifdef DEBUG
+        printf("%p Inserting value %u into node %u into list [%p]... status: %d\n", threadID, desc->ops[opId].value, key, desc->ops[opId].container, *ret);
+#endif
+
+        if (*ret == OK) {
+            onCommit[onCommitIndex++] = new(TransactionHandler::m_onFinishAllocator->Alloc()) OnFinish{list, insertNode, predNode, desc};
+        }
+        else if (*ret == ABORTED) {
+            onAbort[onAbortIndex++] = new(TransactionHandler::m_onFinishAllocator->Alloc()) OnFinish{list, insertNode, predNode, desc};
+        }
+    }
     else
     {
         Node* deleteNode;

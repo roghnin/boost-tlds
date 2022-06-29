@@ -6,6 +6,7 @@
  */
 #ifndef TXNLIST_H
 #define TXNLIST_H
+#include <assert.h>
 #include "translink/dataObjects.h"
 
 class TransactionalContainer
@@ -28,6 +29,21 @@ public:
      */
     virtual ReturnCode Insert(setkey_t key, Desc* desc, uint8_t opid,
             Node*& inserted, Node*& pred) = 0;
+
+    /**
+     * Inserts a node into the list
+     *
+     * @param key       The key of the operation this insert is apart of
+     * @param desc      The Descriptor object describing this operation
+     * @param opid      The id (index) of the operation in the descriptor
+     * @param inserted  The node that was inserted
+     * @param pred      The predecessor node
+     * @return          The ReturnCode of the final status of the operation
+     */
+    virtual ReturnCode Put(setkey_t key, Desc* desc, uint8_t opid,
+            Node*& inserted, Node*& pred) {
+                assert(false && "put not implemented.");
+            }
 
     /**
      * Deletes a node from the list

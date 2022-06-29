@@ -60,7 +60,8 @@ enum OpType
 {
 	FIND = 0,   /**< Find */
 	INSERT,     /**< Insert */
-	DELETE      /**< Delete */
+	DELETE,     /**< Delete */
+    PUT          /**< Delete */
 };
 
 /**

@@ -6,7 +6,17 @@ TransSkipMap::~TransSkipMap()
 }
 
 ReturnCode TransSkipMap::Insert(setkey_t key, Desc* desc, uint8_t opid,
-            Node*& inserted, Node*& pred)
+            Node*& inserted, Node*& pred) {
+    return do_update(key, desc, opid, inserted, pred, false);
+}
+
+ReturnCode TransSkipMap::Put(setkey_t key, Desc* desc, uint8_t opid,
+            Node*& inserted, Node*& pred) {
+    return do_update(key, desc, opid, inserted, pred, true);
+}
+
+ReturnCode TransSkipMap::do_update(setkey_t key, Desc* desc, uint8_t opid,
+            Node*& inserted, Node*& pred, bool is_put)
 {
     inserted = NULL;
     bool ret = false;
@@ -93,9 +103,40 @@ ReturnCode TransSkipMap::Insert(setkey_t key, Desc* desc, uint8_t opid,
         }
         else
         {
+            // key exists. we don't need a new node whether it's a put or not.
             if ( new_node != NULL ) free_node(ptst, new_node);
-            ret = false;
-            goto out;
+            if (is_put)
+            {
+                NodeDesc* currDesc = succ->nodeDesc;
+                if (desc->status != ACTIVE)
+                {
+                    ret = false;
+                    goto out;
+                }
+                // value is in new nodeDesc, so an update of desc would update value as well.
+                currDesc = __sync_val_compare_and_swap(&succ->nodeDesc, oldCurrDesc, nodeDesc);
+
+                if(currDesc == oldCurrDesc)
+                {
+                    // FIXME: if we want to return old value, we'll need additional argument in the signature
+                    // just like Find(), and uncomment the logic below.
+                    
+                    // if (currDesc->desc->status != ABORTED) {
+                    //     value = currDesc->desc->ops[currDesc->opid].value;
+                    // } else if (currDesc->previousNodeDesc != NULL) {
+                    //     value = currDesc->previousNodeDesc->desc->ops[currDesc->previousNodeDesc->opid].value;
+                    // }
+                    ret = true;
+                    goto out;
+                }
+                goto retry;
+            }
+            else
+            {
+                ret = false;
+                goto out;
+            }
+            
         }
     }
 
