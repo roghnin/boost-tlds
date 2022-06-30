@@ -21,7 +21,17 @@ TransListMap::~TransListMap()
 }
 
 ReturnCode TransListMap::Insert(setkey_t key, Desc* desc, uint8_t opid,
-            Node*& inserted, Node*& pred)
+            Node*& inserted, Node*& pred) {
+    return do_update(key, desc, opid, inserted, pred, false);
+}
+
+ReturnCode TransListMap::Put(setkey_t key, Desc* desc, uint8_t opid,
+            Node*& inserted, Node*& pred) {
+    return do_update(key, desc, opid, inserted, pred, true);
+}
+
+ReturnCode TransListMap::do_update(setkey_t key, Desc* desc, uint8_t opid,
+            Node*& inserted, Node*& pred, bool is_put)
 {
     // create the nodeDesc which refers to the current operation in the descriptor
     inserted = NULL;
@@ -143,7 +153,29 @@ ReturnCode TransListMap::Insert(setkey_t key, Desc* desc, uint8_t opid,
             }
             else
             {
-                return FAIL;
+                if (is_put)
+                {
+                    NodeDesc* currDesc = curr->nodeDesc;
+                    currDesc = __sync_val_compare_and_swap(&curr->nodeDesc, oldCurrDesc, nodeDesc);
+                    if(currDesc == oldCurrDesc)
+                    {
+                        // FIXME: if we want to return old value, we'll need additional argument in the signature
+                        // just like Find(), and uncomment the logic below.
+                        
+                        // if (currDesc->desc->status != ABORTED) {
+                        //     value = currDesc->desc->ops[currDesc->opid].value;
+                        // } else if (currDesc->previousNodeDesc != NULL) {
+                        //     value = currDesc->previousNodeDesc->desc->ops[currDesc->previousNodeDesc->opid].value;
+                        // }
+                        return OK;
+                    }
+                    // FIXME: do we need to retry here when CAS fails?
+                    // transListMap::Find() didn't, but transSkipMap::Find() did.
+                }
+                else
+                {
+                    return FAIL;
+                }
             }
         }
     }
